@@ -686,7 +686,7 @@ function library:Window(name)
 	        Button.BorderColor3 = Color3.fromRGB(113,128,147)
 	        Button.Position = UDim2.new(0,6,0,canvas)
 	        Button.Size = UDim2.new(0,170,0,26)
-	        Button.Text = (states[name] and "✓ " or "✗ ") .. name
+	        Button.Text = (states[name] and "[x] " or "[ ] ") .. name
 	        Button.Font = Enum.Font.SourceSans
 	        Button.TextColor3 = Color3.fromRGB(245,246,250)
 	        Button.TextSize = 16
@@ -709,7 +709,7 @@ function library:Window(name)
 	
 	        Button.MouseButton1Up:Connect(function()
 	            states[name] = not states[name]
-				Button.Text = (states[name] and "✓ " or "✗ ") .. name
+				Button.Text = (states[name] and "[x] " or "[ ] ") .. name
 				callback(name, states[name])
 	        end)
 	
