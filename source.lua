@@ -624,6 +624,106 @@ function library:Window(name)
 
         return dropFunctions
     end
+	function functions:MultiDropdown(text, buttons, states, callback)
+	    local text = text or "MultiDropdown"
+	    local buttons = buttons or {}
+	    local states = states or {}
+	    local callback = callback or function() end
+	
+	    local Dropdown = Instance.new("TextButton")
+	    local DownSign = Instance.new("TextLabel")
+	    local DropdownFrame = Instance.new("ScrollingFrame")
+	
+	    sizes[winCount] = sizes[winCount] + 32
+	    Window.Size = UDim2.new(0, 207, 0, sizes[winCount] + 10)
+	
+	    listOffset[winCount] = listOffset[winCount] + 32
+	
+	    Dropdown.Parent = Window
+	    Dropdown.BackgroundColor3 = Color3.fromRGB(53,59,72)
+	    Dropdown.BorderColor3 = Color3.fromRGB(113,128,147)
+	    Dropdown.Position = UDim2.new(0,12,0,listOffset[winCount])
+	    Dropdown.Size = UDim2.new(0,182,0,26)
+	    Dropdown.Font = Enum.Font.SourceSans
+	    Dropdown.Text = text
+	    Dropdown.TextColor3 = Color3.fromRGB(245,246,250)
+	    Dropdown.TextSize = 16
+	    Dropdown.ZIndex = 3 + zindex
+	
+	    DownSign.Parent = Dropdown
+	    DownSign.BackgroundTransparency = 1
+	    DownSign.Position = UDim2.new(0,155,0,2)
+	    DownSign.Size = UDim2.new(0,27,0,22)
+	    DownSign.Font = Enum.Font.SourceSans
+	    DownSign.Text = "^"
+	    DownSign.TextColor3 = Color3.fromRGB(220,221,225)
+	    DownSign.TextSize = 20
+	    DownSign.ZIndex = 4 + zindex
+	
+	    DropdownFrame.Parent = Dropdown
+	    DropdownFrame.BackgroundColor3 = Color3.fromRGB(53,59,72)
+	    DropdownFrame.BorderColor3 = Color3.fromRGB(53,59,72)
+	    DropdownFrame.Position = UDim2.new(0,0,0,28)
+	    DropdownFrame.Size = UDim2.new(0,182,0,0)
+	    DropdownFrame.CanvasSize = UDim2.new()
+	    DropdownFrame.ScrollBarThickness = 4
+	    DropdownFrame.Visible = false
+	    DropdownFrame.ZIndex = 5 + zindex
+	
+	    table.insert(dropdowns, DropdownFrame)
+	
+	    Dropdown.MouseButton1Up:Connect(function()
+	        DropdownFrame.Visible = not DropdownFrame.Visible
+	        DownSign.Rotation = DropdownFrame.Visible and 180 or 0
+	    end)
+	
+	    local canvas = 0
+	
+	    for _, name in ipairs(buttons) do
+	        local Button = Instance.new("TextButton")
+	        Button.Parent = DropdownFrame
+	        Button.BackgroundColor3 = Color3.fromRGB(53,59,72)
+	        Button.BorderColor3 = Color3.fromRGB(113,128,147)
+	        Button.Position = UDim2.new(0,6,0,canvas)
+	        Button.Size = UDim2.new(0,170,0,26)
+	        Button.Text = name
+	        Button.Font = Enum.Font.SourceSans
+	        Button.TextColor3 = Color3.fromRGB(245,246,250)
+	        Button.TextSize = 16
+	        Button.ZIndex = 6 + zindex
+	
+	        local Box = Instance.new("Frame")
+	        Box.Parent = Button
+	        Box.Position = UDim2.new(1,-22,0.5,-8)
+	        Box.Size = UDim2.new(0,16,0,16)
+	        Box.BackgroundColor3 = Color3.fromRGB(47,54,64)
+	        Box.BorderColor3 = Color3.fromRGB(113,128,147)
+	
+	        local Fill = Instance.new("Frame")
+	        Fill.Parent = Box
+	        Fill.Position = UDim2.new(0,3,0,3)
+	        Fill.Size = UDim2.new(0,10,0,10)
+	        Fill.BackgroundColor3 = Color3.fromRGB(68,189,50)
+	        Fill.BorderSizePixel = 0
+	        Fill.Visible = states[name] == true
+	
+	        Button.MouseButton1Up:Connect(function()
+	            states[name] = not states[name]
+	            Fill.Visible = states[name]
+	            callback(name, states[name])
+	        end)
+	
+	        canvas = canvas + 27
+	        DropdownFrame.CanvasSize = UDim2.new(0,0,0,canvas)
+	
+	        if canvas <= 27 * 7 then
+	            DropdownFrame.Size = UDim2.new(0,182,0,canvas)
+	        end
+	    end
+	
+	    return states
+	end
+	
     function functions:ColorPicker(name, default, callback)
         local callback = callback or function() end
 
