@@ -686,7 +686,7 @@ function library:Window(name)
 	        Button.BorderColor3 = Color3.fromRGB(113,128,147)
 	        Button.Position = UDim2.new(0,6,0,canvas)
 	        Button.Size = UDim2.new(0,170,0,26)
-	        Button.Text = (states[name] and "[x] " or "[ ] ") .. name
+	        Button.Text = name
 	        Button.Font = Enum.Font.SourceSans
 	        Button.TextColor3 = Color3.fromRGB(245,246,250)
 	        Button.TextSize = 16
@@ -706,12 +706,20 @@ function library:Window(name)
 	        Fill.BackgroundColor3 = Color3.fromRGB(68,189,50)
 	        Fill.BorderSizePixel = 0
 	        Fill.Visible = states[name] == true
-	
-	        Button.MouseButton1Up:Connect(function()
-	            states[name] = not states[name]
-				Button.Text = (states[name] and "[x] " or "[ ] ") .. name
-				callback(name, states[name])
-	        end)
+
+			local function update()
+			    Button.BackgroundColor3 = states[name]
+			        and Color3.fromRGB(68, 189, 50)
+			        or Color3.fromRGB(53, 59, 72)
+			end
+			
+			update()
+			
+			Button.MouseButton1Up:Connect(function()
+			    states[name] = not states[name]
+			    update()
+			    callback(name, states[name])
+			end)
 	
 	        canvas = canvas + 27
 	        DropdownFrame.CanvasSize = UDim2.new(0,0,0,canvas)
