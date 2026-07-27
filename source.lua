@@ -486,12 +486,18 @@ function library:Window(name)
 
         local slider = {}
         function slider:SetValue(value)
-	    value = math.clamp(value, min, max)
-            local xOffset = (value-min)/max * (Slider.Size.X.Offset)
-            SliderButton.Position = UDim2.new(0, xOffset , -1.33333337, 0);
-            SilderFiller.Size = UDim2.new(0, xOffset, 0, 6)
-            Current.Text = tostring(math.round(value))
-        end
+		    value = math.clamp(value, min, max)
+		
+		    local xOffset =
+		        (value - min) / (max - min)
+		        * (Slider.Size.X.Offset - 5)
+		
+		    SliderButton.Position = UDim2.new(0, xOffset, -1.33333337, 0)
+		    SilderFiller.Size = UDim2.new(0, xOffset, 0, 6)
+		    Current.Text = tostring(math.round(value))
+		
+		    callback(math.round(value))
+		end
         return slider
     end
     function functions:Dropdown(text, buttons, callback, selective)
