@@ -352,7 +352,7 @@ function library:Window(name)
         elseif default < min then
             default = min
         end
-		default = math.round(default / step) * step
+		default = math.round((default - min) / step) * step + min
 		default = math.clamp(default, min, max)
 
         if pastSliders[winCount] then
@@ -388,13 +388,19 @@ function library:Window(name)
                                 xOffset = 0
                             end
 							
-							local value = Lerp(min, max, SliderButton.Position.X.Offset / (Slider.Size.X.Offset - 5))
-							value = math.round(value / step) * step
+							local percent = xOffset / (Slider.Size.X.Offset - 5)
+
+							local value = min + percent * (max - min)
+							value = math.round((value - min) / step) * step + min
 							value = math.clamp(value, min, max)
+							value = tonumber(string.format("%.6f", value))
 							
-                            SliderButton.Position = UDim2.new(0, xOffset , -1.33333337, 0);
-                            SilderFiller.Size = UDim2.new(0, xOffset, 0, 6)
-                            Current.Text = string.format("%.2f", value)
+							xOffset = (value - min) / (max - min) * (Slider.Size.X.Offset - 5)
+							
+							SliderButton.Position = UDim2.new(0, xOffset, -1.33333337, 0)
+							SilderFiller.Size = UDim2.new(0, xOffset, 0, 6)
+							
+							Current.Text = string.format("%.2f", value)
                         else
                             con:Disconnect();
                         end;
@@ -408,9 +414,11 @@ function library:Window(name)
         end
         function SliderEnd(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            local value = Lerp(min, max, SliderButton.Position.X.Offset / (Slider.Size.X.Offset - 5))
-			value = math.round(value / step) * step
+            local percent = xOffset / (Slider.Size.X.Offset - 5)
+			local value = min + percent * (max - min)
+			value = math.round((value - min) / step) * step + min
 			value = math.clamp(value, min, max)
+			value = tonumber(string.format("%.6f", value))
             callback(value)
             end
         end
