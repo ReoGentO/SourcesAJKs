@@ -390,7 +390,7 @@ function library:Window(name)
                             local value = Lerp(min, max, SliderButton.Position.X.Offset / (Slider.Size.X.Offset - 5))
 							value = math.round(value / step) * step
 							value = math.clamp(value, min, max)
-                            Current.Text = tostring(math.round(value))
+                            Current.Text = tostring(value)
                         else
                             con:Disconnect();
                         end;
