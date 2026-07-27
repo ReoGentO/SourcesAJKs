@@ -375,46 +375,46 @@ function library:Window(name)
         function SliderMovement(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 isdragging = true;
-                    minitial = input.Position.X;
-                    initial = SliderButton.Position.X.Offset;
-                    local delta1 = SliderButton.AbsolutePosition.X - initial
-                    local con;
-                    con = stepped:Connect(function()
-                        if isdragging then
-                            local xOffset = mouse.X - delta1 - 3
-                            if xOffset > 175 then
-                                xOffset = 175
-                            elseif xOffset< 0 then
-                                xOffset = 0
-                            end
-							
-							local percent = xOffset / (Slider.Size.X.Offset - 5)
+				minitial = input.Position.X;
+				initial = SliderButton.Position.X.Offset;
+				local delta1 = SliderButton.AbsolutePosition.X - initial
+				local con;
+				con = stepped:Connect(function()
+					if isdragging then
+						local xOffset = mouse.X - delta1 - 3
+						if xOffset > 175 then
+							xOffset = 175
+						elseif xOffset< 0 then
+							xOffset = 0
+						end
+						
+						local percent = xOffset / (Slider.Size.X.Offset - 5)
 
-							local value = min + percent * (max - min)
-							value = math.round((value - min) / step) * step + min
-							value = math.clamp(value, min, max)
-							value = tonumber(string.format("%.6f", value))
-							
-							xOffset = (value - min) / (max - min) * (Slider.Size.X.Offset - 5)
-							
-							SliderButton.Position = UDim2.new(0, xOffset, -1.33333337, 0)
-							SilderFiller.Size = UDim2.new(0, xOffset, 0, 6)
-							
-							Current.Text = string.format("%.2f", value)
-                        else
-                            con:Disconnect();
-                        end;
-                    end);
-                    input.Changed:Connect(function()
-                        if input.UserInputState == Enum.UserInputState.End then
-                            isdragging = false;
-                        end;
-                    end);
+						local value = min + percent * (max - min)
+						value = math.round((value - min) / step) * step + min
+						value = math.clamp(value, min, max)
+						value = tonumber(string.format("%.6f", value))
+						
+						xOffset = (value - min) / (max - min) * (Slider.Size.X.Offset - 5)
+						
+						SliderButton.Position = UDim2.new(0, xOffset, -1.33333337, 0)
+						SilderFiller.Size = UDim2.new(0, xOffset, 0, 6)
+						
+						Current.Text = string.format("%.2f", value)
+					else
+						con:Disconnect();
+					end;
+				end);
+				input.Changed:Connect(function()
+					if input.UserInputState == Enum.UserInputState.End then
+						isdragging = false;
+					end;
+				end);
             end;
         end
         function SliderEnd(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            local percent = xOffset / (Slider.Size.X.Offset - 5)
+            local percent = SliderButton.Position.X.Offset / (Slider.Size.X.Offset - 5)
 			local value = min + percent * (max - min)
 			value = math.round((value - min) / step) * step + min
 			value = math.clamp(value, min, max)
@@ -439,9 +439,7 @@ function library:Window(name)
         SliderButton.BackgroundColor3 = Color3.fromRGB(53, 59, 72)
         SliderButton.BorderColor3 = Color3.fromRGB(113, 128, 147)
         SliderButton.Size = UDim2.new(0, 6, 0, 22)
-        SliderButton.ZIndex = 3 + zindex
-        SliderButton.InputBegan:Connect(SliderMovement)
-        SliderButton.InputEnded:Connect(SliderEnd)    
+        SliderButton.ZIndex = 3 + zindex  
 
         Current.Name = "Current"
         Current.Parent = SliderButton
