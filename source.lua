@@ -499,6 +499,9 @@ function library:Window(name)
         local buttons = buttons or {}
         local callback = callback or function() end
 
+        local placeholder = tostring(text)
+        local selected = nil
+
         local Dropdown = Instance.new("TextButton")
         local DownSign = Instance.new("TextLabel")
         local DropdownFrame = Instance.new("ScrollingFrame")
@@ -516,7 +519,7 @@ function library:Window(name)
         Dropdown.Size = UDim2.new(0, 182, 0, 26)
         Dropdown.Selected = true
         Dropdown.Font = Enum.Font.SourceSans
-        Dropdown.Text = tostring(text)
+        Dropdown.Text = placeholder
         Dropdown.TextColor3 = Color3.fromRGB(245, 246, 250)
         Dropdown.TextSize = 16.000
         Dropdown.TextStrokeTransparency = 123.000
@@ -567,6 +570,15 @@ function library:Window(name)
         table.insert(dropdowns, DropdownFrame)
         local dropFunctions = {}
         local canvasSize = 0
+
+        local function refreshLabel()
+            if selected == nil then
+                Dropdown.Text = placeholder
+            else
+                Dropdown.Text = tostring(selected)
+            end
+        end
+
         function dropFunctions:Button(name)
             local name = name or ""
             local Button_2 = Instance.new("TextButton")
@@ -590,11 +602,11 @@ function library:Window(name)
             DropdownFrame.Size = UDim2.new(0, 182, 0, DropdownFrame.Size.Y.Offset + 27)
             end
             Button_2.MouseButton1Up:Connect(function()
+                selected = name
+                refreshLabel()
                 callback(name)
-		DropdownFrame.Visible = false
-		if selective then
-		   Dropdown.Text = name
-		end
+                DropdownFrame.Visible = false
+                DownSign.Rotation = 0
             end)
         end
         function dropFunctions:Remove(name)
@@ -611,11 +623,49 @@ function library:Window(name)
                     if #DropdownFrame:GetChildren() < 8 then
                         DropdownFrame.Size = UDim2.new(0, 182, 0, DropdownFrame.Size.Y.Offset - 27)
                     end
+                    if selected == name then
+                        selected = nil
+                        refreshLabel()
+                    end
                 end
             end
             if not foundIt then
                 warn("The button you tried to remove didn't exist!")
             end
+        end
+
+        function dropFunctions:Get()
+            return selected
+        end
+
+        function dropFunctions:Set(name, fireCallback)
+            if name == nil then
+                selected = nil
+                refreshLabel()
+                return
+            end
+            for i, v in pairs(DropdownFrame:GetChildren()) do
+                if v:IsA("TextButton") and v.Text == tostring(name) then
+                    selected = v.Text
+                    refreshLabel()
+                    if fireCallback then
+                        callback(selected)
+                    end
+                    return true
+                end
+            end
+            warn("Dropdown:Set - option not found: " .. tostring(name))
+            return false
+        end
+
+        function dropFunctions:Clear()
+            selected = nil
+            refreshLabel()
+        end
+
+        function dropFunctions:SetPlaceholder(newText)
+            placeholder = tostring(newText)
+            refreshLabel()
         end
 
         for i,v in pairs(buttons) do
