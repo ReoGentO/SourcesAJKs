@@ -352,6 +352,8 @@ function library:Window(name)
         elseif default < min then
             default = min
         end
+		default = math.round(default / step) * step
+		default = math.clamp(default, min, max)
 
         if pastSliders[winCount] then
             offset = 60
@@ -385,12 +387,14 @@ function library:Window(name)
                             elseif xOffset< 0 then
                                 xOffset = 0
                             end
-                            SliderButton.Position = UDim2.new(0, xOffset , -1.33333337, 0);
-                            SilderFiller.Size = UDim2.new(0, xOffset, 0, 6)
-                            local value = Lerp(min, max, SliderButton.Position.X.Offset / (Slider.Size.X.Offset - 5))
+							
+							local value = Lerp(min, max, SliderButton.Position.X.Offset / (Slider.Size.X.Offset - 5))
 							value = math.round(value / step) * step
 							value = math.clamp(value, min, max)
-                            Current.Text = tostring(value)
+							
+                            SliderButton.Position = UDim2.new(0, xOffset , -1.33333337, 0);
+                            SilderFiller.Size = UDim2.new(0, xOffset, 0, 6)
+                            Current.Text = string.format("%.2f", value)
                         else
                             con:Disconnect();
                         end;
@@ -437,7 +441,7 @@ function library:Window(name)
         Current.Position = UDim2.new(0, 3, 0, 22   )
         Current.Size = UDim2.new(0, 0, 0, 18)
         Current.Font = Enum.Font.SourceSans
-        Current.Text = tostring(default)
+        Current.Text = string.format("%.2f", default)
         Current.TextColor3 = Color3.fromRGB(220, 221, 225)
         Current.TextSize = 14.000  
         Current.ZIndex = 2 + zindex
