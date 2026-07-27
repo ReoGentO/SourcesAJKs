@@ -339,8 +339,9 @@ function library:Window(name)
         BoxDescription.ZIndex = 2 + zindex
         pastSliders[winCount] = false
     end
-    function functions:Slider(text, min, max, default, callback)
+    function functions:Slider(text, min, max, default, step, callback)
         local text = text or "Slider"
+		local step = step or 1
         local min = min or 1
         local max = max or 100
         local default = default or max/2
@@ -386,7 +387,9 @@ function library:Window(name)
                             end
                             SliderButton.Position = UDim2.new(0, xOffset , -1.33333337, 0);
                             SilderFiller.Size = UDim2.new(0, xOffset, 0, 6)
-                            local value = Lerp(min, max, SliderButton.Position.X.Offset/(Slider.Size.X.Offset-5))
+                            local value = Lerp(min, max, SliderButton.Position.X.Offset / (Slider.Size.X.Offset - 5))
+							value = math.round(value / step) * step
+							value = math.clamp(value, min, max)
                             Current.Text = tostring(math.round(value))
                         else
                             con:Disconnect();
@@ -486,17 +489,16 @@ function library:Window(name)
 
         local slider = {}
         function slider:SetValue(value)
+		    value = math.round(value / step) * step
 		    value = math.clamp(value, min, max)
 		
-		    local xOffset =
-		        (value - min) / (max - min)
-		        * (Slider.Size.X.Offset - 5)
+		    local xOffset = (value - min) / (max - min) * (Slider.Size.X.Offset - 5)
 		
 		    SliderButton.Position = UDim2.new(0, xOffset, -1.33333337, 0)
 		    SilderFiller.Size = UDim2.new(0, xOffset, 0, 6)
-		    Current.Text = tostring(math.round(value))
+		    Current.Text = tostring(value)
 		
-		    callback(math.round(value))
+		    callback(value)
 		end
         return slider
     end
