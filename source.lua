@@ -404,8 +404,10 @@ function library:Window(name)
         end
         function SliderEnd(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            local value = Lerp(min, max, SliderButton.Position.X.Offset/(Slider.Size.X.Offset-5))
-            callback(math.round(value))
+            local value = Lerp(min, max, SliderButton.Position.X.Offset / (Slider.Size.X.Offset - 5))
+			value = math.round(value / step) * step
+			value = math.clamp(value, min, max)
+            callback(value)
             end
         end
 
