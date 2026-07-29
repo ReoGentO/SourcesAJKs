@@ -323,7 +323,7 @@ function library:Window(name)
             callback(TextBox.Text, false)
         end)
         TextBox.FocusLost:Connect(function(enterPassed)
-            callback(TextBox.Text, true, enterPassed)
+            callback(TextBox.Text, true, enterPassed, TextBox)
         end)
 
         BoxDescription.Name = "BoxDescription"
@@ -339,7 +339,6 @@ function library:Window(name)
         BoxDescription.TextXAlignment = Enum.TextXAlignment.Left
         BoxDescription.ZIndex = 2 + zindex
         pastSliders[winCount] = false
-		return TextBox
     end
     function functions:Slider(text, min, max, default, step, callback)
         local text = text or "Slider"
