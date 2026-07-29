@@ -306,6 +306,7 @@ function library:Window(name)
         local TextBox = Instance.new("TextBox")
         local BoxDescription = Instance.new("TextLabel")
         TextBox.Parent = Window
+		TextBox.ClearTextOnFocus = false
         TextBox.BackgroundColor3 = Color3.fromRGB(53, 59, 72)
         TextBox.BorderColor3 = Color3.fromRGB(113, 128, 147)
         TextBox.Position = UDim2.new(0, 99, 0, listOffset[winCount])
@@ -318,11 +319,11 @@ function library:Window(name)
         TextBox.TextSize = 16.000
         TextBox.TextStrokeColor3 = Color3.fromRGB(245, 246, 250)
         TextBox.ZIndex = 2 + zindex
-        TextBox:GetPropertyChangedSignal('Text'):connect(function()
+        TextBox:GetPropertyChangedSignal('Text'):Сonnect(function()
             callback(TextBox.Text, false)
         end)
-        TextBox.FocusLost:Connect(function()
-            callback(TextBox.Text, true)
+        TextBox.FocusLost:Connect(function(enterPassed)
+            callback(TextBox.Text, true, enterPassed)
         end)
 
         BoxDescription.Name = "BoxDescription"
@@ -338,6 +339,7 @@ function library:Window(name)
         BoxDescription.TextXAlignment = Enum.TextXAlignment.Left
         BoxDescription.ZIndex = 2 + zindex
         pastSliders[winCount] = false
+		return TextBox
     end
     function functions:Slider(text, min, max, default, step, callback)
         local text = text or "Slider"
