@@ -319,7 +319,7 @@ function library:Window(name)
         TextBox.TextSize = 16.000
         TextBox.TextStrokeColor3 = Color3.fromRGB(245, 246, 250)
         TextBox.ZIndex = 2 + zindex
-        TextBox:GetPropertyChangedSignal('Text'):Сonnect(function()
+        TextBox:GetPropertyChangedSignal('Text'):Connect(function()
             callback(TextBox.Text, false, false, TextBox)
         end)
         TextBox.FocusLost:Connect(function(enterPassed)
